@@ -24,7 +24,7 @@ public class Util {
         return SchemaHolder.SCHEMA;
     }
 
-    public static Struct toStruct(Pojo pojo) {
+    public static Struct wrap(Pojo pojo) {
         Struct struct = new Struct(schema());
         if (pojo != null) {
             Field[] fields = Pojo.class.getDeclaredFields();
@@ -38,6 +38,22 @@ public class Util {
             }
         }
         return struct;
+    }
+
+    public static Pojo unwrap(Struct struct) {
+        Pojo pojo = new Pojo();
+        if (struct != null) {
+            Field[] fields = Pojo.class.getDeclaredFields();
+            for (Field field : fields) {
+                field.setAccessible(true);
+                try {
+                    field.set(pojo, struct.get(field.getName()));
+                } catch (IllegalArgumentException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return pojo;
     }
 
     public static JsonConverter convertor() {

@@ -47,7 +47,7 @@ public class KafkaFileStreamConnectorTest {
 
             @Override
             public byte[] serialize(Pojo element) {
-                return Util.convertor().fromConnectData(topic, Util.schema(), Util.toStruct(element));
+                return Util.convertor().fromConnectData(topic, Util.schema(), Util.wrap(element));
             }
         }).produce();
     }
